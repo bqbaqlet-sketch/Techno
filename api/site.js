@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   try {
     const site = await load();
     if (req.method === 'GET') {
-      return res.status(200).json({ wa: site.wa, items: site.items || {} });
+      return res.status(200).json({ wa: site.wa, items: site.items || {}, zones: site.zones || null });
     }
     if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
 
@@ -49,14 +49,25 @@ export default async function handler(req, res) {
       for (const [id, o] of Object.entries(b.items || {})) {
         if (!/^IMG_\d{1,6}$/.test(id) || !o) continue;
         const price = Math.round(Number(o.price));
+        const rent = Math.round(Number(o.rent));
         const photo = typeof o.photo === 'string' && /^(https:\/\/|\/img\/)/.test(o.photo) && o.photo.length < 600 ? o.photo : '';
         items[id] = {
           price: Number.isFinite(price) && price > 0 && price < 1e10 ? price : 0,
+          rent: Number.isFinite(rent) && rent > 0 && rent < 1e9 ? rent : 0,
           status: STATUSES.includes(o.status) ? o.status : 'order',
           photo,
         };
       }
-      await redis.set(KEY, { ...site, wa, items });
+      const zones = Array.isArray(b.zones)
+        ? b.zones
+            .slice(0, 6)
+            .map((z) => ({
+              name: String((z && z.name) || '').trim().slice(0, 60),
+              price: Math.max(0, Math.min(1e7, Math.round(Number(z && z.price)) || 0)),
+            }))
+            .filter((z) => z.name)
+        : site.zones;
+      await redis.set(KEY, { ...site, wa, items, zones });
       return res.status(200).json({ ok: true });
     }
 
