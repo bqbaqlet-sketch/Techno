@@ -123,6 +123,27 @@ footer{margin-top:30px;color:var(--muted);font-size:13px;text-align:center}
 .obar span{font-size:13px;color:var(--muted)}
 .gate{max-width:360px;margin:40px auto}
 .warn{color:#9C2018}
+[hidden]{display:none!important}
+.rentline{font-size:13px;color:var(--muted)}.rentline a{color:var(--accent);font-weight:600}
+.og2{display:grid;gap:10px;grid-template-columns:1fr 1fr}.og2 .field{margin:0}
+@media(max-width:480px){.og2{grid-template-columns:1fr}}
+.rent{align-items:start}
+.sumrow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;font-size:14px}.sumrow span{color:var(--on-dark-m)}.sumrow b{text-align:right}
+.sumtot{border-top:1px dashed var(--dark-line);margin-top:8px;padding-top:14px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sumtot b{font:600 clamp(28px,7vw,38px)/1 var(--fd)}
+.modal{position:fixed;inset:0;background:rgba(20,22,21,.6);display:grid;place-items:center;padding:16px;z-index:20}
+.mbox{background:#fff;border-radius:18px;max-width:480px;width:100%;max-height:92vh;overflow:auto}
+.mh{display:flex;gap:10px;align-items:center;padding:12px 8px 12px 16px}
+.mh .wi{width:40px;height:40px;border-radius:50%;background:#25D366;display:grid;place-items:center;color:#fff;flex:none}
+.mh b{display:block}.mh small{color:var(--muted)}
+.mx{margin-left:auto;appearance:none;border:0;background:none;font-size:28px;line-height:1;cursor:pointer;width:44px;height:44px}
+.mchat{background:#E8EFEA;padding:16px}
+.bub{background:#DCF8C6;border-radius:12px;padding:12px 14px;font-size:14px;white-space:pre-wrap;word-break:break-word;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.mf{display:grid;gap:10px;padding:14px 16px 6px;grid-template-columns:1fr 1fr}
+.mf .btn,.mf .ghost{margin:0;width:100%;padding:0 10px}
+.btn.wa{background:#1B9E52}.btn.wa:hover{background:#15823F}
+.mnote{padding:0 16px 16px;font-size:13px;color:var(--muted)}
+@media(max-width:420px){.mf{grid-template-columns:1fr}}
 </style></head><body>
 <div class="wrap" id="pub">
 <div class="bar">
@@ -132,7 +153,7 @@ footer{margin-top:30px;color:var(--muted);font-size:13px;text-align:center}
   <span><i class="dot"></i>Консультация в WhatsApp</span>
   <a href="https://instagram.com/tech_auto_kg" target="_blank" rel="noopener">@tech_auto_kg</a>
  </div>
- <div class="acts"><button class="ghost" data-go="order" type="button">Оставить заявку</button><a class="btn" data-wa href="#" rel="noopener">Написать в WhatsApp</a></div>
+ <div class="acts"><button class="ghost" data-go="rent" type="button">Рассчитать аренду</button><a class="btn" data-wa href="#" rel="noopener">Написать в WhatsApp</a></div>
 </div>
 
 <section class="hero" id="top">
@@ -166,6 +187,33 @@ footer{margin-top:30px;color:var(--muted);font-size:13px;text-align:center}
  <div class="grid" id="grid"></div>
 </section>
 
+<section class="sec" id="rent">
+ <span class="eyebrow" style="color:var(--accent)">— Расчёт аренды</span>
+ <h2 class="title" style="margin-top:6px">Укажите детали работы</h2>
+ <p class="subt">Заполните параметры объекта — сумма пересчитается автоматически.</p>
+ <p class="panel" id="rempty" hidden style="margin-top:14px">Тарифы аренды скоро появятся. Напишите нам в WhatsApp — подберём технику и назовём цену.</p>
+ <div class="two rent" id="rbody" style="margin-top:14px">
+  <div class="panel" id="rf">
+   <div class="field" style="margin-top:0"><label for="r-t">Выбранная техника</label><select id="r-t"></select></div>
+   <div class="field"><label for="r-a">Адрес объекта</label><input id="r-a" autocomplete="street-address" placeholder="Бишкек, ул. …"></div>
+   <div class="og2" style="margin-top:14px"><div class="field"><label for="r-d">Дата начала работ</label><input id="r-d" type="date"></div><div class="field"><label for="r-h">Желаемое время подачи</label><input id="r-h" type="time" value="09:00"></div></div>
+   <div class="og2" style="margin-top:14px"><div class="field"><label for="r-n">Количество часов</label><input id="r-n" type="number" min="1" max="720" step="1" inputmode="numeric" value="8"></div><div class="field"><label for="r-z">Зона доставки</label><select id="r-z"></select></div></div>
+   <div class="field"><label for="r-c">Комментарий</label><textarea id="r-c" placeholder="Что нужно сделать на объекте"></textarea></div>
+  </div>
+  <div class="panel dk">
+   <span class="eyebrow" style="color:var(--on-dark-m)">Расчёт заказа</span>
+   <h3 class="title" style="font-size:24px;margin:4px 0 10px">Итоговая стоимость</h3>
+   <div class="sumrow"><span>Техника</span><b id="s-t"></b></div>
+   <div class="sumrow"><span>Продолжительность</span><b id="s-h"></b></div>
+   <div class="sumrow"><span>Стоимость аренды</span><b id="s-r"></b></div>
+   <div class="sumrow"><span id="s-zl">Доставка</span><b id="s-z"></b></div>
+   <div class="sumtot"><span>Итого</span><b id="s-sum"></b></div>
+   <button class="btn" id="rsend" type="button">Отправить заявку в WhatsApp →</button>
+   <p class="help" style="color:var(--on-dark-m)">Перед отправкой вы увидите текст заявки.</p>
+  </div>
+ </div>
+</section>
+
 <div class="promo"><b>Не знаете, какая техника нужна? Расскажите о задаче — мы подберём.</b><p class="subt" style="margin:0">Консультация бесплатная. Напишите в WhatsApp — ответим в рабочее время.</p></div>
 
 <section class="sec two" id="order">
@@ -193,6 +241,12 @@ footer{margin-top:30px;color:var(--muted);font-size:13px;text-align:center}
   <a class="ghost dk" style="margin-top:10px;width:100%" href="https://2gis.kg/bishkek/firm/70000001093552768" target="_blank" rel="noopener">Открыть в 2ГИС</a>
  </div>
 </section>
+<div class="modal" id="modal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-label="Заявка для WhatsApp">
+ <div class="mh"><div class="wi"><svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 13.9c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.5.9 1.2 1.6 2 2.1.3.2.5.2.7 0l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.3.1.4.2.5.3.1.2.1.8-.1 1.4z"/></svg></div><div><b>Заявка для WhatsApp</b><small id="mwa"></small></div><button class="mx" id="rclose" type="button" aria-label="Закрыть">×</button></div>
+ <div class="mchat"><div class="bub" id="mmsg"></div></div>
+ <div class="mf"><button class="ghost" id="rcopy" type="button">Скопировать заявку</button><a class="btn wa" id="mopen" target="_blank" rel="noopener" href="#">Открыть WhatsApp</a></div>
+ <p class="mnote">После нажатия «Открыть WhatsApp» текст появится в чате, останется нажать «Отправить».</p>
+</div></div>
 <footer>© Тех Авто · ОсОО «Тех Авто» · Бишкек · <a href="#owner">Для владельца</a></footer>
 </div>
 <div id="own" hidden></div>
@@ -211,14 +265,14 @@ var IMGS={};try{IMGS=JSON.parse($('#imgs').textContent)}catch(e){}
 function hp(s){var h1=0xdeadbeef^7,h2=0x41c6ce57^7;for(var i=0,c;i<s.length;i++){c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return(4294967296*(2097151&h2)+(h1>>>0)).toString(36)}
 var DEF_PIN=hp('ta:1234');
 var state={};try{state=JSON.parse($('#state').textContent)||{}}catch(e){}
-state.wa=state.wa||'996556150245';state.items=state.items||{};
+var DEFZ=[{name:'В пределах города',price:1500},{name:'До 30 км от города',price:3000},{name:'Более 30 км',price:0}];state.wa=state.wa||'996556150245';state.items=state.items||{};state.zones=Array.isArray(state.zones)&&state.zones.length?state.zones:DEFZ.map(function(z){return{name:z.name,price:z.price}});
 var assets=true,dirty=false,saving=false,msg='',PIN='';try{PIN=sessionStorage.getItem('ownerPin')||''}catch(e){}
 var unlocked=!!PIN;
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function digits(s){var d=String(s||'').replace(/\D/g,'');if(d.length===10&&d.charAt(0)==='0')d='996'+d.slice(1);if(d.length===9)d='996'+d;return d}
 function pretty(d){return d.length===12&&d.indexOf('996')===0?'+996 '+d.slice(3,6)+' '+d.slice(6,9)+' '+d.slice(9):'+'+d}
 function wa(t){return 'https://wa.me/'+digits(state.wa)+(t?'?text='+encodeURIComponent(t):'')}
-function g(id){var o=state.items[id]||{};return{price:o.price>0?Math.round(o.price):0,status:ST[o.status]?o.status:'order',photo:typeof o.photo==='string'?o.photo:''}}
+function g(id){var o=state.items[id]||{};return{rent:o.rent>0?Math.round(o.rent):0,price:o.price>0?Math.round(o.price):0,status:ST[o.status]?o.status:'order',photo:typeof o.photo==='string'?o.photo:''}}
 function set(id,k,v){var o=state.items[id]||(state.items[id]={});o[k]=v;dirty=true;msg='';paintBar()}
 function money(n){return n>0?n.toLocaleString('ru-RU')+' сом':'Цена по запросу'}
 function toast(t){var r=$('#toast-root');r.innerHTML='<div class="toast">'+esc(t)+'</div>';clearTimeout(toast.t);toast.t=setTimeout(function(){r.innerHTML=''},3000)}
@@ -227,7 +281,7 @@ function cards(){
   $('#grid').innerHTML=META.map(function(m){
     var s=g(m.id),sold=s.status==='sold';
     return '<article class="card'+(sold?' is-sold':'')+'" data-cat="'+m.cat+'"><div class="photo"><img src="'+esc(s.photo||IMGS[m.id]||'')+'" alt="'+esc(m.name)+'" loading="lazy"><span class="tag">'+CATS[m.cat]+'</span><span class="pill '+s.status+'" style="top:44px">'+ST[s.status]+'</span></div>'+
-    '<div class="info"><h3>'+esc(m.name)+'</h3><p class="sub">'+esc(m.sub)+'</p><div class="price">'+money(s.price)+'</div>'+
+    '<div class="info"><h3>'+esc(m.name)+'</h3><p class="sub">'+esc(m.sub)+'</p><div class="price">'+money(s.price)+'</div>'+(s.rent>0&&!sold?'<div class="rentline">Аренда: '+fmt(s.rent)+' сом/час · <a href="#rent" data-rent="'+m.id+'">рассчитать</a></div>':'')+
     (sold?'<span class="btn off">Продано</span>':'<a class="btn" target="_blank" rel="noopener" href="'+esc(wa('Здравствуйте! Интересует «'+m.name+'». Подскажите цену и наличие.'))+'">'+(s.price>0?'Заказать':'Узнать цену и наличие')+'</a>')+'</div></article>';
   }).join('');
   var f=($('.chip[aria-pressed=true]')||{dataset:{}}).dataset.f||'all';
@@ -235,6 +289,7 @@ function cards(){
   $('#f-t').innerHTML='<option>Нужна консультация по подбору</option>'+META.filter(function(m){return g(m.id).status!=='sold'}).map(function(m){return '<option>'+esc(m.name)+'</option>'}).join('');
   $$('[data-wa]').forEach(function(a){a.href=wa('Здравствуйте! Пишу с сайта Тех Авто.')});
   $$('[data-tel]').forEach(function(a){a.href='tel:+'+digits(state.wa);a.textContent=pretty(digits(state.wa))});
+  rentInit();
 }
 
 /* ---- владелец ---- */
@@ -246,9 +301,10 @@ function owner(){
   }
   var h='<div class="bar"><a class="brand" href="#"><b>Панель владельца</b></a><a class="ghost" href="#">← На сайт</a></div>'+
   '<div class="panel"><div class="field" style="margin-top:0"><label for="o-wa">Номер WhatsApp для заявок</label><input id="o-wa" type="tel" value="'+esc(state.wa)+'"></div><p class="help" id="wah">Сейчас: '+esc(pretty(digits(state.wa)))+'</p></div>';
+  h+='<div class="panel" style="margin-top:12px"><h3 class="title" style="font-size:20px">Зоны доставки (для аренды)</h3><p class="help">Цена 0 — «по договорённости».</p>'+state.zones.map(function(z,i){return '<div class="og" style="margin-top:10px"><div class="field"><label>Название</label><input data-z="'+i+'" data-zf="name" value="'+esc(z.name)+'"></div><div class="field"><label>Цена, сом</label><input type="number" min="0" step="500" inputmode="numeric" data-z="'+i+'" data-zf="price" value="'+z.price+'"></div></div>'}).join('')+'</div>';
   h+=META.map(function(m){var s=g(m.id);
     return '<div class="orow"><h3>'+esc(m.name)+'</h3><div class="og"><div class="field"><label>Цена, сом (0 — по запросу)</label><input type="number" min="0" step="1000" inputmode="numeric" data-id="'+m.id+'" data-f="price" value="'+s.price+'"></div>'+
-    '<div class="field"><label>Статус</label><select data-id="'+m.id+'" data-f="status">'+Object.keys(ST).map(function(k){return '<option value="'+k+'"'+(k===s.status?' selected':'')+'>'+ST[k]+'</option>'}).join('')+'</select></div>'+
+    '<div class="field"><label>Статус</label><select data-id="'+m.id+'" data-f="status">'+Object.keys(ST).map(function(k){return '<option value="'+k+'"'+(k===s.status?' selected':'')+'>'+ST[k]+'</option>'}).join('')+'</select></div><div class="field"><label>Аренда, сом/час (0 — не сдаётся)</label><input type="number" min="0" step="100" inputmode="numeric" data-id="'+m.id+'" data-f="rent" value="'+s.rent+'"></div>'+
     '<div class="full oph"><img src="'+esc(s.photo||IMGS[m.id]||'')+'" alt="">'+(assets?'<button class="ghost" type="button" data-photo="'+m.id+'">Заменить фото</button><input type="file" accept="image/*" hidden data-file="'+m.id+'">'+(s.photo?'<button class="ghost" type="button" data-unphoto="'+m.id+'">Вернуть прежнее</button>':''):'<span class="help">Загрузка фото доступна при открытии под аккаунтом владельца в Claude.</span>')+'</div></div></div>';
   }).join('');
   h+='<div class="panel" style="margin-top:12px"><h3 class="title" style="font-size:20px">Сменить PIN-код</h3><div class="field"><label for="o-pin">Новый PIN (4 цифры)</label><input id="o-pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off"></div><p class="help" id="pinh"></p><button class="ghost" id="pinset" type="button" style="margin-top:10px">Установить PIN</button></div>'+
@@ -270,7 +326,7 @@ async function tryPin(){
 async function save(){
   if(saving||!dirty)return;
   saving=true;paintBar();
-  try{await api({action:'save',pin:PIN,wa:state.wa,items:state.items});dirty=false;msg='Сохранено для всех'}
+  try{await api({action:'save',pin:PIN,wa:state.wa,items:state.items,zones:state.zones});dirty=false;msg='Сохранено для всех'}
   catch(e){msg=e.status===401?'PIN изменился. Обновите страницу и войдите заново.':'Не удалось сохранить. Попробуйте ещё раз.';if(e.status===401){unlocked=false;PIN=''}}
   saving=false;paintBar();
 }
@@ -283,9 +339,55 @@ async function shrink(file){
   try{var b=await createImageBitmap(file),k=Math.min(1,1200/Math.max(b.width,b.height)),c=document.createElement('canvas');c.width=Math.round(b.width*k);c.height=Math.round(b.height*k);c.getContext('2d').drawImage(b,0,0,c.width,c.height);return await new Promise(function(r){c.toBlob(r,'image/jpeg',.85)})||file}catch(e){return file}
 }
 
+function fmt(n){return Math.round(n).toLocaleString('ru-RU')}
+function hrs(n){var a=n%100,b=n%10;return n+(a>10&&a<15?' часов':b===1?' час':b>1&&b<5?' часа':' часов')}
+function rentable(){return META.filter(function(m){var s=g(m.id);return s.rent>0&&s.status!=='sold'})}
+function rentInit(){
+  if(!$('#r-t'))return;
+  var list=rentable(),cur=$('#r-t').value;
+  $('#rbody').hidden=!list.length;$('#rempty').hidden=!!list.length;
+  if(!list.length)return;
+  $('#r-t').innerHTML=list.map(function(m){return '<option value="'+m.id+'">'+esc(m.name)+' · '+fmt(g(m.id).rent)+' сом/ч</option>'}).join('');
+  if(cur&&list.some(function(m){return m.id===cur}))$('#r-t').value=cur;
+  var z=state.zones,zc=$('#r-z').value;
+  $('#r-z').innerHTML=z.map(function(x,i){return '<option value="'+i+'">'+esc(x.name)+' — '+(x.price>0?fmt(x.price)+' сом':'по договорённости')+'</option>'}).join('');
+  if(zc!==''&&z[zc])$('#r-z').value=zc;
+  if(!$('#r-d').value){var d=new Date();$('#r-d').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+  rentCalc();
+}
+function rentData(){
+  var id=$('#r-t').value,m=META.filter(function(x){return x.id===id})[0];if(!m)return null;
+  var n=Math.floor(Number($('#r-n').value)),ok=n>=1&&n<=720,z=state.zones[$('#r-z').value]||{name:'',price:0},rate=g(id).rent,rent=ok?rate*n:0;
+  return{m:m,n:ok?n:0,z:z,rent:rent,total:rent+(z.price>0?z.price:0)};
+}
+function rentCalc(){
+  var d=rentData();if(!d)return;
+  $('#s-t').textContent=d.m.name;$('#s-h').textContent=d.n?hrs(d.n):'—';$('#s-r').textContent=d.n?fmt(d.rent)+' сом':'—';
+  $('#s-zl').textContent='Доставка: '+d.z.name;$('#s-z').textContent=d.z.price>0?fmt(d.z.price)+' сом':'по договорённости';
+  $('#s-sum').textContent=fmt(d.total)+' сом';
+}
+function rentPick(id){rentInit();var s=$('#r-t');if(s&&rentable().some(function(m){return m.id===id})){s.value=id;rentCalc()}var el=$('#rent');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+function rentMsg(){
+  var d=rentData();if(!d)return null;
+  var a=$('#r-a').value.trim(),dt=$('#r-d').value,tm=$('#r-h').value,c=$('#r-c').value.trim();
+  if(!a){toast('Укажите адрес объекта');return null}
+  if(!dt){toast('Укажите дату начала работ');return null}
+  if(!d.n){toast('Укажите количество часов (от 1 до 720)');return null}
+  var ds=new Date(dt+'T00:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'})+' г.';
+  return 'Здравствуйте! Хочу арендовать спецтехнику.\n\nТехника: '+d.m.name+'\nАдрес: '+a+'\nДата: '+ds+'\nВремя: '+(tm||'—')+'\nПродолжительность: '+hrs(d.n)+'\nЗона доставки: '+d.z.name+(d.z.price>0?'':' (стоимость по договорённости)')+'\nРассчитанная стоимость: '+fmt(d.total)+' сом'+(d.z.price>0?'':' + доставка')+(c?'\nКомментарий: '+c:'');
+}
+function rentOpen(){var t=rentMsg();if(!t)return;$('#mmsg').textContent=t;$('#mopen').href=wa(t);$('#mwa').textContent=pretty(digits(state.wa));$('#modal').hidden=false;document.body.style.overflow='hidden'}
+function rentClose(){var m=$('#modal');if(m)m.hidden=true;document.body.style.overflow=''}
+function rentCopy(){var t=$('#mmsg').textContent;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){toast('Заявка скопирована')},function(){toast('Не удалось скопировать')});else toast('Не удалось скопировать')}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')rentClose()});
+
 /* ---- события ---- */
 document.addEventListener('click',function(e){
   var t=e.target,x;
+  if((x=t.closest('[data-rent]'))){e.preventDefault();rentPick(x.dataset.rent);return}
+  if(t.closest('#rsend')){rentOpen();return}
+  if(t.closest('#rcopy')){rentCopy();return}
+  if(t.closest('#rclose')||t===$('#modal')){rentClose();return}
   if((x=t.closest('[data-go]'))){var el=document.getElementById(x.dataset.go);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return}
   if((x=t.closest('.chip'))){var f=x.dataset.f;$$('.chip').forEach(function(c){c.setAttribute('aria-pressed',String(c===x))});$$('.card').forEach(function(k){k.hidden=!(f==='all'||k.dataset.cat===f)});return}
   if(t.closest('#pingo')){tryPin();return}
@@ -307,8 +409,10 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('input',function(e){
   var t=e.target;
+  if(t.dataset&&t.dataset.z!==undefined){var zi=+t.dataset.z;if(!state.zones[zi])return;state.zones[zi][t.dataset.zf]=t.dataset.zf==='price'?Math.max(0,Math.round(Number(t.value))||0):t.value;dirty=true;msg='';paintBar();return}
+  if(t.closest&&t.closest('#rf')){rentCalc();return}
   if(t.id==='o-wa'){var d=digits(t.value);if(d.length>=11&&d.length<=15){state.wa=d;dirty=true;msg='';paintBar();$('#wah').textContent='Сейчас: '+pretty(d)}return}
-  if(t.dataset&&t.dataset.f==='price'){var n=Math.round(Number(t.value));set(t.dataset.id,'price',isFinite(n)&&n>0?n:0)}
+  if(t.dataset&&(t.dataset.f==='price'||t.dataset.f==='rent')){var n=Math.round(Number(t.value));set(t.dataset.id,t.dataset.f,isFinite(n)&&n>0?n:0)}
 });
 document.addEventListener('change',async function(e){
   var t=e.target;
@@ -324,7 +428,7 @@ window.addEventListener('hashchange',route);
 cards();route();
 fetch('/api/site',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){
   if(!j)return;
-  state.wa=j.wa||state.wa;state.items=j.items||{};
+  state.wa=j.wa||state.wa;state.items=j.items||{};state.zones=Array.isArray(j.zones)&&j.zones.length?j.zones:state.zones;
   if(location.hash==='#owner'){if(!dirty&&unlocked)owner()}else cards();
 }).catch(function(){});
 })();
